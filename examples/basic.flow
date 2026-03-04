@@ -1,0 +1,39 @@
+# iot-flow example
+#
+# This file demonstrates a complete sensor‑to‑actuator pipeline using the
+# iot‑flow DSL.  The pipeline reads temperature data from a sensor, filters out
+# values below 20 °C, and drives an LED accordingly.
+#
+# Author: Myroslav Mokhammad Abdeljawwad
+
+pipeline "Temperature to LED Control" {
+    # Define the source sensor with its unique identifier
+    sensor "temp_sensor_1" as temp {
+        type = "analog";
+        pin = A0;
+        unit = "°C";
+    }
+
+    # Define the actuator (LED) that will be driven by the pipeline
+    actuator "led_indicator" as led {
+        type = "digital";
+        pin = D13;
+    }
+
+    # Read raw temperature value from the sensor
+    read temp from temp_sensor_1;
+
+    # Filter: only pass values greater than 20 °C
+    filter temp > 20;
+
+    # Map the filtered temperature to LED state:
+    #   if temperature >= 25 → LED ON
+    #   else                   → LED OFF
+    map temp {
+        when >= 25 => led = "ON";
+        otherwise  => led = "OFF";
+    }
+
+    # Execute the write operation to the actuator
+    write led_indicator = led;
+}
