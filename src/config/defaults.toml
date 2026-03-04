@@ -1,0 +1,64 @@
+# Default configuration for iot-flow
+#
+# This file provides sane defaults for the DSL parser, code generator,
+# and runtime system.  Adjust values as needed for your deployment.
+#
+# Author: Myroslav Mokhammad Abdeljawwad
+
+[parser]
+# Tokenization settings
+tokenize_comments = true          # Preserve comments in AST for debugging
+max_token_length = 256            # Maximum length of a single token before error
+
+# AST generation options
+generate_debug_info = true        # Include line/column info in AST nodes
+allow_missing_semicolons = false  # Enforce strict syntax
+
+[codegen]
+# Target language and optimization
+target_language = "rust"          # Options: rust, c, assembly
+optimization_level = "O2"         # Standard compiler flags (e.g., O0, O1, O2, O3)
+
+# Code formatting preferences
+indent_style = "space"
+indent_width = 4
+
+[runtime]
+# Embedded system defaults
+heap_size_kb = 64                # Heap size for embedded C runtime
+stack_size_kb = 16               # Stack size per task/thread
+
+# Logging configuration
+log_level = "info"              # Options: error, warn, info, debug, trace
+log_to_stdout = true            # Emit logs to stdout in non-embedded builds
+
+[hardware]
+# Default sensor and actuator mappings (IDs are placeholders)
+sensors = [
+    { id = 1, type = "temperature", pin = "A0" },
+    { id = 2, type = "humidity",    pin = "A1" }
+]
+
+actuators = [
+    { id = 101, type = "relay",     pin = "D5" },
+    { id = 102, type = "led",       pin = "D13" }
+]
+
+[build]
+# Cargo build profile for embedded targets
+profile.release.opt-level = 3
+profile.release.lto = true
+profile.release.debug-assertions = false
+
+[watchdog]
+enabled = true                    # Enable watchdog timer in runtime
+timeout_seconds = 30              # Reset if no activity within this period
+
+[network]
+# Optional network configuration for remote diagnostics
+enabled = false
+server_address = "127.0.0.1"
+port = 8080
+ssl_enabled = false
+
+# End of defaults.toml
